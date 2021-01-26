@@ -7,14 +7,16 @@ import (
 )
 
 type GameRepository struct {
+	pointStorage map[string]int
 }
 
 func NewGameRepository() domain.Repository {
 	return &GameRepository{}
 }
 
-func (gr *GameRepository) AddPoints(id string, points int) error {
-	return nil
+func (gr *GameRepository) AddPoints(id string, points int) map[string]int {
+	gr.pointStorage[id] = points
+	return gr.pointStorage
 }
 
 // Separated into another GameService function so that it can be mocked in tests

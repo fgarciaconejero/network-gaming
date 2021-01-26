@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/fgarciaconejero/network-gaming/game/api"
 	"github.com/fgarciaconejero/network-gaming/internal"
 	"github.com/gin-gonic/gin"
 )
@@ -8,5 +9,6 @@ import (
 func main() {
 	g := gin.Default()
 	g.Use(gin.Logger())
-	internal.NewServer(g, "8080").AddHandlers().Run()
+	auxApi := api.NewGameHandler()
+	internal.NewServer(g, "8080").AddHandlers(auxApi).Run()
 }

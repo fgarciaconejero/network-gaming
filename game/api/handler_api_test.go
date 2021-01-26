@@ -1,6 +1,7 @@
 package api_test
 
 import (
+	"context"
 	"net/http"
 	"net/http/httptest"
 	"reflect"
@@ -9,6 +10,7 @@ import (
 	"github.com/fgarciaconejero/network-gaming/common"
 	"github.com/fgarciaconejero/network-gaming/game/api"
 	"github.com/fgarciaconejero/network-gaming/game/domain"
+	"github.com/fgarciaconejero/network-gaming/game/domain/model"
 	"github.com/fgarciaconejero/network-gaming/internal"
 	"github.com/gin-gonic/gin"
 )
@@ -31,11 +33,13 @@ func TestGameHandler_NewGameHandler(t *testing.T) {
 		})
 	}
 }
+
 func TestGameHandler_Start(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	g := gin.Default()
 	g.Use(gin.Logger())
-	s := internal.NewServer(g, "8080").AddHandlers()
+	gh := &api.GameHandler{GameService: &GSMock{}}
+	s := internal.NewServer(g, "8080").AddHandlers(gh)
 
 	headers := map[string]string{
 		"Content-Type": "application/json",
@@ -99,4 +103,11 @@ func TestGameHandler_Start(t *testing.T) {
 			}
 		})
 	}
+}
+
+type GSMock struct {
+}
+
+func (gs *GSMock) Start(g context.Context, players []model.Player) string {
+	return ""
 }

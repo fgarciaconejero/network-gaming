@@ -60,16 +60,9 @@ func (gh *GameHandler) Start(g *gin.Context) {
 		aux = append(aux, *v.ToModel())
 	}
 
-	err := gh.GameService.Start(g, aux)
-	if err != nil {
-		g.AbortWithStatusJSON(http.StatusUnprocessableEntity, common.ErrResponse{
-			Error:   "Unprocessable Entity",
-			Message: err.Error(),
-		})
-		return
-	} else {
-		g.JSON(http.StatusOK, err)
-	}
+	got := gh.GameService.Start(g, aux)
+	g.JSON(http.StatusOK, got)
+
 }
 
 func sortNumbers(p dto.Player) dto.Player {

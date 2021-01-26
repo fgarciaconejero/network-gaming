@@ -2,7 +2,6 @@ package service_test
 
 import (
 	"context"
-	"errors"
 	"reflect"
 	"testing"
 
@@ -42,7 +41,7 @@ func TestGameService_Start(t *testing.T) {
 		name    string
 		args    args
 		fields  fields
-		want    *service.GameService
+		want    string
 		wantErr bool
 	}{
 		{
@@ -60,7 +59,7 @@ func TestGameService_Start(t *testing.T) {
 					},
 				},
 			},
-			want:    &service.GameService{},
+			want:    "",
 			wantErr: false,
 		},
 		{
@@ -78,7 +77,7 @@ func TestGameService_Start(t *testing.T) {
 					},
 				},
 			},
-			want:    &service.GameService{},
+			want:    "",
 			wantErr: false,
 		},
 		{
@@ -96,7 +95,7 @@ func TestGameService_Start(t *testing.T) {
 					},
 				},
 			},
-			want:    &service.GameService{},
+			want:    "",
 			wantErr: false,
 		},
 	}
@@ -105,9 +104,9 @@ func TestGameService_Start(t *testing.T) {
 			k := &service.GameService{
 				GameRepository: tt.fields.gr,
 			}
-			err := k.Start(tt.args.ctx, tt.args.p)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("GameService.Start() error = %v, wantErr = %v", err, tt.wantErr)
+			got := k.Start(tt.args.ctx, tt.args.p)
+			if got != tt.want {
+				t.Errorf("GameService.Start() got = %v, want = %v", got, tt.want)
 				return
 			}
 		})
@@ -118,11 +117,8 @@ type MockRepository struct {
 	wantErr bool
 }
 
-func (mr MockRepository) AddPoints(id string, points int) error {
-	if mr.wantErr {
-		return errors.New("Error while adding points")
-	}
-	return nil
+func (mr MockRepository) AddPoints(id string, points int) map[string]int {
+	return map[string]int{}
 }
 
 func (mr MockRepository) GenerateRandomNumber() int {

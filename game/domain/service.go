@@ -7,5 +7,5 @@ import (
 )
 
 type Service interface {
-	Start(g context.Context, players []model.Player) error
+	Start(g context.Context, players []model.Player) string
 }
