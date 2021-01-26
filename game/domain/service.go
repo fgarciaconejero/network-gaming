@@ -1,7 +1,7 @@
 package domain
 
 import (
-	"../domain/model"
+	"github.com/fgarciaconejero/network-gaming/game/domain/model"
 	"github.com/gin-gonic/gin"
 )
 

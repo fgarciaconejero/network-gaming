@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"net/http"
 
-	"../api/dto"
+	"github.com/fgarciaconejero/network-gaming/game/api/dto"
+	"gopkg.in/go-playground/validator.v9"
 
-	"../domain"
-	"../domain/model"
+	"github.com/fgarciaconejero/network-gaming/game/domain"
+	"github.com/fgarciaconejero/network-gaming/game/domain/model"
 
 	"github.com/gin-gonic/gin"
-	"gopkg.in/go-playground/validator.v9"
 )
 
 type GameHandler struct {
@@ -48,7 +48,7 @@ func (gh *GameHandler) Start(g *gin.Context) {
 
 	aux := []model.Player{}
 	for _, v := range players {
-		aux = append(aux, &v.ToModel())
+		aux = append(aux, *v.ToModel())
 	}
 
 	err := gh.GameService.Start(g, aux)

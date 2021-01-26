@@ -1,7 +1,7 @@
 package main
 
 import (
-	"./internal"
+	"github.com/fgarciaconejero/network-gaming/internal"
 	"github.com/gin-gonic/gin"
 )
 

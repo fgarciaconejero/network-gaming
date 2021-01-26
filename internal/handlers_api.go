@@ -1,8 +1,8 @@
 package internal
 
 import (
-	"../game/api"
-	"../game/domain"
+	"github.com/fgarciaconejero/network-gaming/game/api"
+	"github.com/fgarciaconejero/network-gaming/game/domain"
 )
 
 func (r *SRV) AddHandlers() *SRV {
