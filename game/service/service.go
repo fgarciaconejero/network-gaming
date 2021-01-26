@@ -19,17 +19,19 @@ func NewGameService() domain.Service {
 
 func (gs *GameService) Start(g context.Context, players []model.Player) error {
 	serverNumber := gs.GameRepository.GenerateRandomNumber()
+	var err error
 	for _, v := range players {
 		if v.FirstNumber == serverNumber || v.SecondNumber == serverNumber {
-			gs.GameRepository.AddPoints(v.ID, 5)
+			err = gs.GameRepository.AddPoints(v.ID, 5)
 		} else if serverNumber > v.FirstNumber && serverNumber < v.SecondNumber {
 			aux := 5 - (v.SecondNumber - v.FirstNumber)
 			if aux > 0 {
-				gs.GameRepository.AddPoints(v.ID, 5-(v.SecondNumber-v.FirstNumber))
+				err = gs.GameRepository.AddPoints(v.ID, 5-(v.SecondNumber-v.FirstNumber))
 			}
 		} else {
-			gs.GameRepository.AddPoints(v.ID, -1)
+			err = gs.GameRepository.AddPoints(v.ID, -1)
 		}
 	}
-	return nil
+
+	return err
 }
