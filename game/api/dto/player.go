@@ -3,8 +3,8 @@ package dto
 import "github.com/fgarciaconejero/network-gaming/game/domain/model"
 
 type Player struct {
-	FirstNumber  int `json:"first_value" validate:"required"`
-	SecondNumber int `json:"second_value" validate:"required"`
+	FirstNumber  int `json:"first_number" validate:"required"`
+	SecondNumber int `json:"second_number" validate:"required"`
 }
 
 func (p *Player) ToModel() *model.Player {

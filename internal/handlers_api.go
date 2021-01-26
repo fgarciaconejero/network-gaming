@@ -15,7 +15,6 @@ func AddPingHandler(r *SRV) *SRV {
 	healthCheckHandler := &HealthChecker{}
 
 	route := r.Group("/ping")
-	route.Use()
 	route.GET("", healthCheckHandler.Get)
 	return r
 }
