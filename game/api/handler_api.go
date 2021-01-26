@@ -60,7 +60,7 @@ func (gh *GameHandler) Start(g *gin.Context) {
 		aux = append(aux, *v.ToModel())
 	}
 
-	result, err := gh.GameService.Start(g, aux)
+	err := gh.GameService.Start(g, aux)
 	if err != nil {
 		g.AbortWithStatusJSON(http.StatusUnprocessableEntity, common.ErrResponse{
 			Error:   "Unprocessable Entity",
@@ -68,7 +68,7 @@ func (gh *GameHandler) Start(g *gin.Context) {
 		})
 		return
 	} else {
-		g.JSON(http.StatusOK, result)
+		g.JSON(http.StatusOK, err)
 	}
 }
 

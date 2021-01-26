@@ -14,6 +14,7 @@ func NewGameService() domain.Service {
 	return &GameService{}
 }
 
-func (gs *GameService) Start(g *gin.Context, players []model.Player) (bool, error) {
-	return true, nil
+func (gs *GameService) Start(g *gin.Context, players []model.Player) error {
+
+	return nil
 }

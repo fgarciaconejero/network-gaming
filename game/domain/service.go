@@ -6,5 +6,5 @@ import (
 )
 
 type Service interface {
-	Start(g *gin.Context, players []model.Player) (bool, error)
+	Start(g *gin.Context, players []model.Player) error
 }
