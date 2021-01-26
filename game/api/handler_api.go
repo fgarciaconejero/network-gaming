@@ -28,6 +28,7 @@ func (gh *GameHandler) Start(g *gin.Context) {
 	if errBind != nil {
 		errs := fmt.Sprintf("ERRORS: %s", "Unprocessable Entity")
 		responseError(g, http.StatusUnprocessableEntity, "Unprocessable Entity", errors.New(errs))
+		return
 	}
 
 	if len(players) == 0 {

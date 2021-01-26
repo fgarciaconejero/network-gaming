@@ -41,10 +41,7 @@ func TestGameHandler_Start(t *testing.T) {
 		"Content-Type": "application/json",
 	}
 
-	body := `{
-		"first_number": "2",
-		"second_number": "3"
-	}`
+	body := `[{"first_number":2,"second_number":3}]`
 
 	type server struct {
 		s *internal.SRV
@@ -61,8 +58,26 @@ func TestGameHandler_Start(t *testing.T) {
 		{
 			name:    "first test",
 			server:  server{s: s},
-			request: request{r: common.MakeRequest(http.MethodPost, "game/start", body, headers)},
+			request: request{r: common.MakeRequest(http.MethodPost, `/game/start`, body, headers)},
 			want:    200,
+		},
+		{
+			name:    "Unprocessable entity test",
+			server:  server{s: s},
+			request: request{r: common.MakeRequest(http.MethodPost, `/game/start`, `[{"first_number":"2","second_number":3}]`, headers)},
+			want:    422,
+		},
+		{
+			name:    "Length == 0 test",
+			server:  server{s: s},
+			request: request{r: common.MakeRequest(http.MethodPost, `/game/start`, `[]`, headers)},
+			want:    400,
+		},
+		{
+			name:    "Validator fail test",
+			server:  server{s: s},
+			request: request{r: common.MakeRequest(http.MethodPost, `/game/start`, `[{"first_number":2}]`, headers)},
+			want:    400,
 		},
 	}
 	for _, tt := range tests {
