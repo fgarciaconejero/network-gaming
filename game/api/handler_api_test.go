@@ -42,6 +42,10 @@ func TestGameHandler_Start(t *testing.T) {
 	}
 
 	body := `[{"id":"facu","first_number":2,"second_number":3}]`
+	unsortedBody := `[{"id":"facu","first_number":4,"second_number":3}]`
+	unprocessableBody := `[{"first_number":"asd","second_number":"3"}]`
+	noLengthBody := `[]`
+	validatorFailBody := `[{"first_number":2}]`
 
 	type server struct {
 		s *internal.SRV
@@ -62,21 +66,27 @@ func TestGameHandler_Start(t *testing.T) {
 			want:    200,
 		},
 		{
+			name:    "unsorted test",
+			server:  server{s: s},
+			request: request{r: common.MakeRequest(http.MethodPost, `/game/start`, unsortedBody, headers)},
+			want:    200,
+		},
+		{
 			name:    "Unprocessable entity test",
 			server:  server{s: s},
-			request: request{r: common.MakeRequest(http.MethodPost, `/game/start`, `[{"first_number":"asd","second_number":"3"}]`, headers)},
+			request: request{r: common.MakeRequest(http.MethodPost, `/game/start`, unprocessableBody, headers)},
 			want:    400,
 		},
 		{
 			name:    "Length == 0 test",
 			server:  server{s: s},
-			request: request{r: common.MakeRequest(http.MethodPost, `/game/start`, `[]`, headers)},
+			request: request{r: common.MakeRequest(http.MethodPost, `/game/start`, noLengthBody, headers)},
 			want:    400,
 		},
 		{
 			name:    "Validator fail test",
 			server:  server{s: s},
-			request: request{r: common.MakeRequest(http.MethodPost, `/game/start`, `[{"first_number":2}]`, headers)},
+			request: request{r: common.MakeRequest(http.MethodPost, `/game/start`, validatorFailBody, headers)},
 			want:    400,
 		},
 	}
