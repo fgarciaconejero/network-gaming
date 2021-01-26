@@ -46,13 +46,55 @@ func TestGameService_Start(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "first test",
+			name: "on the spot test",
 			fields: fields{
 				gr: MockRepository{},
 			},
 			args: args{
 				ctx: context.Background(),
-				p:   []model.Player{},
+				p: []model.Player{
+					{
+						ID:           "facu",
+						FirstNumber:  5,
+						SecondNumber: 9,
+					},
+				},
+			},
+			want:    &service.GameService{},
+			wantErr: false,
+		},
+		{
+			name: "in between test",
+			fields: fields{
+				gr: MockRepository{},
+			},
+			args: args{
+				ctx: context.Background(),
+				p: []model.Player{
+					{
+						ID:           "facu",
+						FirstNumber:  4,
+						SecondNumber: 8,
+					},
+				},
+			},
+			want:    &service.GameService{},
+			wantErr: false,
+		},
+		{
+			name: "out of bounds test",
+			fields: fields{
+				gr: MockRepository{},
+			},
+			args: args{
+				ctx: context.Background(),
+				p: []model.Player{
+					{
+						ID:           "facu",
+						FirstNumber:  1,
+						SecondNumber: 2,
+					},
+				},
 			},
 			want:    &service.GameService{},
 			wantErr: false,
@@ -81,4 +123,8 @@ func (mr MockRepository) AddPoints(id string, points int) error {
 		return errors.New("Error while adding points")
 	}
 	return nil
+}
+
+func (mr MockRepository) GenerateRandomNumber() int {
+	return 5
 }

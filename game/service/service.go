@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"math/rand"
 
 	"github.com/fgarciaconejero/network-gaming/game/domain"
 	"github.com/fgarciaconejero/network-gaming/game/domain/model"
@@ -19,7 +18,7 @@ func NewGameService() domain.Service {
 }
 
 func (gs *GameService) Start(g context.Context, players []model.Player) error {
-	serverNumber := rand.Intn(9) + 1
+	serverNumber := gs.GameRepository.GenerateRandomNumber()
 	for _, v := range players {
 		if v.FirstNumber == serverNumber || v.SecondNumber == serverNumber {
 			gs.GameRepository.AddPoints(v.ID, 5)
