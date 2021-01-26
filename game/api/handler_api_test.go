@@ -64,8 +64,8 @@ func TestGameHandler_Start(t *testing.T) {
 		{
 			name:    "Unprocessable entity test",
 			server:  server{s: s},
-			request: request{r: common.MakeRequest(http.MethodPost, `/game/start`, `[{"first_number":"2","second_number":3}]`, headers)},
-			want:    422,
+			request: request{r: common.MakeRequest(http.MethodPost, `/game/start`, `[{"first_number":"asd","second_number":"3"}]`, headers)},
+			want:    400,
 		},
 		{
 			name:    "Length == 0 test",
