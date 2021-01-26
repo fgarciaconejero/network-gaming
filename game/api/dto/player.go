@@ -13,3 +13,8 @@ func (p *Player) ToModel() *model.Player {
 		SecondNumber: p.SecondNumber,
 	}
 }
+
+func (c *Player) FromModel(pm *model.Player) {
+	c.FirstNumber = pm.FirstNumber
+	c.SecondNumber = pm.SecondNumber
+}
