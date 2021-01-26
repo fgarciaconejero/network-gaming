@@ -1,4 +1,5 @@
 package domain
 
-type Repository struct {
+type Repository interface {
+	AddPoints(string, int) error
 }

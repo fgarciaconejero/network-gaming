@@ -41,7 +41,7 @@ func TestGameHandler_Start(t *testing.T) {
 		"Content-Type": "application/json",
 	}
 
-	body := `[{"first_number":2,"second_number":3}]`
+	body := `[{"id":"facu","first_number":2,"second_number":3}]`
 
 	type server struct {
 		s *internal.SRV

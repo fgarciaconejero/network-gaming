@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/fgarciaconejero/network-gaming/common"
@@ -57,6 +56,7 @@ func (gh *GameHandler) Start(g *gin.Context) {
 
 	aux := []model.Player{}
 	for _, v := range players {
+		v = sortNumbers(v)
 		aux = append(aux, *v.ToModel())
 	}
 
@@ -72,7 +72,11 @@ func (gh *GameHandler) Start(g *gin.Context) {
 	}
 }
 
-func responseError(g *gin.Context, code int, message string, err error) {
-	fmt.Printf("%v\n", err)
-	g.AbortWithStatusJSON(code, map[string]interface{}{"error": message})
+func sortNumbers(p dto.Player) dto.Player {
+	if p.FirstNumber > p.SecondNumber {
+		aux := p.SecondNumber
+		p.SecondNumber = p.FirstNumber
+		p.FirstNumber = aux
+	}
+	return p
 }
