@@ -1,11 +1,12 @@
 package api
 
 import (
-	"errors"
 	"fmt"
 	"net/http"
 
+	"github.com/fgarciaconejero/network-gaming/common"
 	"github.com/fgarciaconejero/network-gaming/game/api/dto"
+	"github.com/fgarciaconejero/network-gaming/game/service"
 	"gopkg.in/go-playground/validator.v9"
 
 	"github.com/fgarciaconejero/network-gaming/game/domain"
@@ -19,20 +20,26 @@ type GameHandler struct {
 }
 
 func NewGameHandler() domain.API {
-	return &GameHandler{}
+	gs := service.NewGameService()
+	return &GameHandler{GameService: gs}
 }
 
 func (gh *GameHandler) Start(g *gin.Context) {
 	players := []dto.Player{}
 	errBind := g.BindJSON(&players)
 	if errBind != nil {
-		errs := fmt.Sprintf("ERRORS: %s", "Unprocessable Entity")
-		responseError(g, http.StatusUnprocessableEntity, "Unprocessable Entity", errors.New(errs))
+		g.AbortWithStatusJSON(http.StatusUnprocessableEntity, common.ErrResponse{
+			Error:   "Unprocessable Entity",
+			Message: "The body doesn't match up with expected format",
+		})
+		return
 	}
 
 	if len(players) == 0 {
-		errs := fmt.Sprintf("ERRORS: %s", "No players sent")
-		responseError(g, http.StatusBadRequest, "Bad Request", errors.New(errs))
+		g.AbortWithStatusJSON(http.StatusBadRequest, common.ErrResponse{
+			Error:   "Bad Request",
+			Message: "No players were sent",
+		})
 		return
 	}
 
@@ -40,8 +47,10 @@ func (gh *GameHandler) Start(g *gin.Context) {
 	for _, v := range players {
 		valerr := validate.Struct(v)
 		if valerr != nil {
-			errs := fmt.Sprintf("ERRORS: %v", "Bad Request")
-			responseError(g, http.StatusBadRequest, "Bad Request", errors.New(errs))
+			g.AbortWithStatusJSON(http.StatusBadRequest, common.ErrResponse{
+				Error:   "Bad Request",
+				Message: valerr.Error(),
+			})
 			return
 		}
 	}
@@ -51,12 +60,15 @@ func (gh *GameHandler) Start(g *gin.Context) {
 		aux = append(aux, *v.ToModel())
 	}
 
-	err := gh.GameService.Start(g, aux)
+	result, err := gh.GameService.Start(g, aux)
 	if err != nil {
-		errs := fmt.Sprintf("ERRORS: %s", err)
-		responseError(g, http.StatusUnprocessableEntity, "Cannot start game", errors.New(errs))
+		g.AbortWithStatusJSON(http.StatusUnprocessableEntity, common.ErrResponse{
+			Error:   "Unprocessable Entity",
+			Message: err.Error(),
+		})
+		return
 	} else {
-		g.JSON(http.StatusCreated, players)
+		g.JSON(http.StatusOK, result)
 	}
 }
 

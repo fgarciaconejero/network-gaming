@@ -6,8 +6,8 @@ import (
 )
 
 func (r *SRV) AddHandlers() *SRV {
-	r = AddGameHandlers(r, api.NewGameHandler())
 	r = AddPingHandler(r)
+	r = AddGameHandlers(r, api.NewGameHandler())
 	return r
 }
 
@@ -15,7 +15,6 @@ func AddPingHandler(r *SRV) *SRV {
 	healthCheckHandler := &HealthChecker{}
 
 	route := r.Group("/ping")
-	route.Use()
 	route.GET("", healthCheckHandler.Get)
 	return r
 }
