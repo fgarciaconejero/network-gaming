@@ -1,13 +1,12 @@
 package internal
 
 import (
-	"github.com/fgarciaconejero/network-gaming/game/api"
 	"github.com/fgarciaconejero/network-gaming/game/domain"
 )
 
-func (r *SRV) AddHandlers() *SRV {
+func (r *SRV) AddHandlers(gh domain.API) *SRV {
 	r = AddPingHandler(r)
-	r = AddGameHandlers(r, api.NewGameHandler())
+	r = AddGameHandlers(r, gh)
 	return r
 }
 

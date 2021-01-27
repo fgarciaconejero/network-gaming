@@ -1,10 +1,7 @@
 package model
 
-type Game struct {
-	players []Player
-}
-
 type Player struct {
+	ID           string
 	FirstNumber  int
 	SecondNumber int
 }
