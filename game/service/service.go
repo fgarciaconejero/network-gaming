@@ -19,22 +19,36 @@ func NewGameService() domain.Service {
 
 func (gs *GameService) Start(g context.Context, players []model.Player) string {
 	serverNumber := gs.GameRepository.GenerateRandomNumber()
-	var points map[string]int
-	for _, v := range players {
-		if v.FirstNumber == serverNumber || v.SecondNumber == serverNumber {
-			points = gs.GameRepository.AddPoints(v.ID, 5)
-		} else if serverNumber > v.FirstNumber && serverNumber < v.SecondNumber {
-			aux := 5 - (v.SecondNumber - v.FirstNumber)
-			if aux > 0 {
-				points = gs.GameRepository.AddPoints(v.ID, 5-(v.SecondNumber-v.FirstNumber))
+	for i := 0; i < 30; i++ {
+		for _, v := range players {
+			if v.FirstNumber == serverNumber || v.SecondNumber == serverNumber {
+				gs.GameRepository.AddPoints(v.ID, 5)
+			} else if serverNumber > v.FirstNumber && serverNumber < v.SecondNumber {
+				aux := 5 - (v.SecondNumber - v.FirstNumber)
+				if aux > 0 {
+					gs.GameRepository.AddPoints(v.ID, 5-(v.SecondNumber-v.FirstNumber))
+				}
+			} else {
+				gs.GameRepository.AddPoints(v.ID, -1)
 			}
-		} else {
-			points = gs.GameRepository.AddPoints(v.ID, -1)
 		}
 
-		if points[v.ID] == 21 {
-			return v.ID
+		points := gs.GameRepository.GetPoints()
+		for k, v := range points {
+			if v == 21 {
+				return k
+			}
 		}
 	}
-	return ""
+
+	max := 0
+	winner := ""
+	points := gs.GameRepository.GetPoints()
+	for k, v := range points {
+		if v > max {
+			max = v
+			winner = k
+		}
+	}
+	return winner
 }

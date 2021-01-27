@@ -47,7 +47,7 @@ func TestGameService_Start(t *testing.T) {
 		{
 			name: "on the spot test",
 			fields: fields{
-				gr: MockRepository{},
+				gr: MockRepository{scoreBoard: make(map[string]int)},
 			},
 			args: args{
 				ctx: context.Background(),
@@ -57,15 +57,20 @@ func TestGameService_Start(t *testing.T) {
 						FirstNumber:  5,
 						SecondNumber: 9,
 					},
+					{
+						ID:           "pedro",
+						FirstNumber:  4,
+						SecondNumber: 8,
+					},
 				},
 			},
-			want:    "",
+			want:    "pedro",
 			wantErr: false,
 		},
 		{
 			name: "in between test",
 			fields: fields{
-				gr: MockRepository{},
+				gr: MockRepository{scoreBoard: make(map[string]int)},
 			},
 			args: args{
 				ctx: context.Background(),
@@ -75,15 +80,20 @@ func TestGameService_Start(t *testing.T) {
 						FirstNumber:  4,
 						SecondNumber: 8,
 					},
+					{
+						ID:           "pedro",
+						FirstNumber:  1,
+						SecondNumber: 3,
+					},
 				},
 			},
-			want:    "",
+			want:    "facu",
 			wantErr: false,
 		},
 		{
 			name: "out of bounds test",
 			fields: fields{
-				gr: MockRepository{},
+				gr: MockRepository{scoreBoard: make(map[string]int)},
 			},
 			args: args{
 				ctx: context.Background(),
@@ -93,9 +103,14 @@ func TestGameService_Start(t *testing.T) {
 						FirstNumber:  1,
 						SecondNumber: 2,
 					},
+					{
+						ID:           "pedro",
+						FirstNumber:  5,
+						SecondNumber: 2,
+					},
 				},
 			},
-			want:    "",
+			want:    "pedro",
 			wantErr: false,
 		},
 	}
@@ -114,13 +129,19 @@ func TestGameService_Start(t *testing.T) {
 }
 
 type MockRepository struct {
-	wantErr bool
+	scoreBoard map[string]int
+	wantErr    bool
 }
 
-func (mr MockRepository) AddPoints(id string, points int) map[string]int {
-	return map[string]int{}
+func (mr MockRepository) AddPoints(id string, points int) {
+	mr.scoreBoard[id] += points
+	return
 }
 
 func (mr MockRepository) GenerateRandomNumber() int {
 	return 5
+}
+
+func (mr MockRepository) GetPoints() map[string]int {
+	return mr.scoreBoard
 }

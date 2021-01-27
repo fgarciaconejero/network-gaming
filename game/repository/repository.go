@@ -14,8 +14,11 @@ func NewGameRepository() domain.Repository {
 	return &GameRepository{}
 }
 
-func (gr *GameRepository) AddPoints(id string, points int) map[string]int {
-	gr.pointStorage[id] = points
+func (gr *GameRepository) AddPoints(id string, points int) {
+	gr.pointStorage[id] += points
+}
+
+func (gr *GameRepository) GetPoints() map[string]int {
 	return gr.pointStorage
 }
 
